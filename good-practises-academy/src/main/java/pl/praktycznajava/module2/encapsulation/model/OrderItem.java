@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -15,8 +17,16 @@ public class OrderItem {
     private Product product;
     private int quantity;
 
-    public double getWeight() {
-        return product.getWeight();
+    public BigDecimal calculateItemValue(int quantity) {
+        return product.calculateAmount(quantity);
+    }
+
+    public void updateProductStockQuantity() {
+        product.updateStockQuantity(quantity);
+    }
+
+    public double calculateTotalWeight(){
+        return product.getWeight() * quantity;
     }
 
 }
