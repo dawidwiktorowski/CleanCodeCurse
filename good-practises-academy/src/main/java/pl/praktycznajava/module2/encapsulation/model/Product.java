@@ -25,7 +25,7 @@ public class Product {
     }
 
     public void updateStockQuantity(int quantity) {
-        if (this.stockQuantity < quantity) {
+        if (stockQuantity < quantity) {
             throw new InsufficientStockException(this, quantity);
         }
         stockQuantity -= quantity;

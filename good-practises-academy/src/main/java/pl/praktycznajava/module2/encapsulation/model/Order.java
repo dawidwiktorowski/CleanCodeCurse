@@ -46,20 +46,20 @@ public class Order {
         if (deliveryAddress != null) {
             this.deliveryAddress = deliveryAddress;
         }
-        this.deliveryCost = calculateDeliveryCost();
+        deliveryCost = calculateDeliveryCost();
     }
 
     public void changeDeliveryType(DeliveryType deliveryType) {
         if (deliveryType != null) {
             this.deliveryType = deliveryType;
         }
-        this.deliveryCost = calculateDeliveryCost();
+        deliveryCost = calculateDeliveryCost();
     }
 
     public void addProduct(Product product, int quantity) {
 
         OrderItem newItem = OrderItem.of(product, quantity);
-        this.items.add(newItem);
+        items.add(newItem);
 
         BigDecimal totalAmount = this.totalAmount.add(newItem.calculateItemValue(quantity));
 
@@ -69,21 +69,21 @@ public class Order {
         this.totalAmount = totalAmount;
 
         if (discount != null) {
-            this.discountAmount = discount;
+            discountAmount = discount;
         }
     }
 
     public void completeOrder() {
         validateAndUpdateQuantities();
-        this.status = COMPLETED;
+        status = COMPLETED;
     }
 
     private BigDecimal calculateDeliveryCost() {
-        double totalWeight = this.items.stream()
+        double totalWeight = items.stream()
                 .mapToDouble(OrderItem::calculateTotalWeight)
                 .sum();
 
-        double deliveryTypeCost = this.deliveryType == EXPRESS ? HIGH_DELIVERY_COST : LOW_DELIVERY_COST;
+        double deliveryTypeCost = deliveryType == EXPRESS ? HIGH_DELIVERY_COST : LOW_DELIVERY_COST;
         double shippingCost = totalWeight * TAX + deliveryTypeCost;
 
         if (!this.getDeliveryCountry().equals(POLAND)) {
@@ -97,16 +97,16 @@ public class Order {
 
     private BigDecimal calculateDiscount() {
         BigDecimal discount = ZERO;
-        if (this.totalAmount.compareTo(BigDecimal.valueOf(500)) > 0) {
-            discount = this.totalAmount.multiply(BigDecimal.valueOf(0.2));
-        } else if (this.totalAmount.compareTo(BigDecimal.valueOf(50)) > 0) {
-            discount = this.totalAmount.multiply(BigDecimal.valueOf(0.05));
+        if (totalAmount.compareTo(BigDecimal.valueOf(500)) > 0) {
+            discount = totalAmount.multiply(BigDecimal.valueOf(0.2));
+        } else if (totalAmount.compareTo(BigDecimal.valueOf(50)) > 0) {
+            discount = totalAmount.multiply(BigDecimal.valueOf(0.05));
         }
         return discount;
     }
 
     private void validateAndUpdateQuantities() {
-        for (OrderItem item : this.items) {
+        for (OrderItem item : items) {
             item.updateProductStockQuantity();
         }
     }
