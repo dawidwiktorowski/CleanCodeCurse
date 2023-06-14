@@ -2,8 +2,8 @@ package pl.praktycznajava.module3.valueobjects.challenge2.model;
 
 import lombok.Value;
 @Value
-public final class Currency {
-    private final String code;
+public class Currency {
+    String code;
 
     private Currency(String code) {
         if (code == null){

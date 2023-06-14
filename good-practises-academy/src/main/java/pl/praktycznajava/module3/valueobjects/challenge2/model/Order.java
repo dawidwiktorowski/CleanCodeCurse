@@ -10,23 +10,25 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-import static pl.praktycznajava.module3.valueobjects.challenge2.OrderService.FREE_SHIPPING_THRESHOLD_CURRENCY;
-import static pl.praktycznajava.module3.valueobjects.challenge2.OrderService.MAX_PERCENT;
-
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor(staticName = "of")
 public final class Order {
+
+    public static final Currency FREE_SHIPPING_THRESHOLD_CURRENCY = Currency.of("USD");
+    public static final BigDecimal FREE_SHIPPING_THRESHOLD_AMOUNT = BigDecimal.valueOf(100);
+    public static final int MAX_PERCENT = 100;
+
     List<OrderItem> items;
     BigDecimal totalAmount;
     Currency currency;
 
-    public boolean hasFreeShipping(BigDecimal thresholdAmount, CurrencyConverter currencyConverter) {
-        if (currency.isSameCurrency(FREE_SHIPPING_THRESHOLD_CURRENCY)) {
-            return totalAmount.compareTo(thresholdAmount) > 0;
-        } else {
+    public boolean hasFreeShipping(CurrencyConverter currencyConverter) {
+        if(!currency.isSameCurrency(FREE_SHIPPING_THRESHOLD_CURRENCY)) {
             BigDecimal convertedAmount = currencyConverter.convertTo(totalAmount, currency, FREE_SHIPPING_THRESHOLD_CURRENCY);
-            return convertedAmount.compareTo(thresholdAmount) > 0;
+            return convertedAmount.compareTo(FREE_SHIPPING_THRESHOLD_AMOUNT) > 0;
+        } else {
+            return totalAmount.compareTo(FREE_SHIPPING_THRESHOLD_AMOUNT) > 0;
         }
     }
 
